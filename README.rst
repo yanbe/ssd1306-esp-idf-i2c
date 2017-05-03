@@ -19,6 +19,6 @@ Be aware about there are serveal models on 128x64 OLED display with SSD1306. Lik
 
 In case it does not work, please check your circit. Consider insert 10k ohm pull-up registors on between 3.3v power supply and (SDA, SCK) pins respectively, as OLED display consumes larger current comparing with other tiny I2C sensors. In my case, 10k ohm pull-up registors stabilized voltage level for clock and SDA and the code worked correctly.
 
-.. _main.c: https://github.com/yanbe/bme280-esp-idf-i2c/blob/master/main/main.c
+.. _main.c: https://github.com/yanbe/ssd1306-esp-idf-i2c/blob/master/main/main.c
 .. _ESP32 datasheet: https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf
 .. _Solomon Systech's SSD1306 datasheet: https://www.robot-r-us.com/e/986-ssd1306-datasheet-for-096-oled.html
