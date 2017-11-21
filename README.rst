@@ -18,7 +18,7 @@ From you project root
 
 ```
 git submodule add https://github.com/morganrallen/libssd1306-esp-idf-i2c.git components/libssd1306-esp-idf-i2c
-make # Enable SDD1306, set SDA/SCL to appropriate pins
+make # Enable SSD1306, set SDA/SCL to appropriate pins
 ```
 
 ----------
