@@ -29,35 +29,67 @@ void i2c_master_init()
 		.scl_io_num = SCL_PIN,
 		.sda_pullup_en = GPIO_PULLUP_ENABLE,
 		.scl_pullup_en = GPIO_PULLUP_ENABLE,
-		.master.clk_speed = 1000000
+		.master.clk_speed = 700000
 	};
-	i2c_param_config(I2C_NUM_0, &i2c_config);
-	i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, 0);
+
+	assert(ESP_OK == i2c_param_config(I2C_NUM_0, &i2c_config));
+	assert(ESP_OK == i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, 0));
 }
 
 void ssd1306_init() {
-	esp_err_t espRc;
+  esp_err_t espRc;
 
-	i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+  i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 
-	i2c_master_start(cmd);
-	i2c_master_write_byte(cmd, (OLED_I2C_ADDRESS << 1) | I2C_MASTER_WRITE, true);
-	i2c_master_write_byte(cmd, OLED_CONTROL_BYTE_CMD_STREAM, true);
+  assert(ESP_OK == i2c_master_start(cmd));
+  assert(ESP_OK == i2c_master_write_byte(cmd, (OLED_I2C_ADDRESS << 1) | I2C_MASTER_WRITE, true));
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CONTROL_BYTE_CMD_STREAM, true));
 
-	i2c_master_write_byte(cmd, OLED_CMD_SET_CHARGE_PUMP, true);
-	i2c_master_write_byte(cmd, 0x14, true);
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_DISPLAY_OFF, true));
 
-	i2c_master_write_byte(cmd, OLED_CMD_SET_SEGMENT_REMAP, true); // reverse left-right mapping
-	i2c_master_write_byte(cmd, OLED_CMD_SET_COM_SCAN_MODE, true); // reverse up-bottom mapping
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_SET_DISPLAY_CLK_DIV, true));
+  assert(ESP_OK == i2c_master_write_byte(cmd, 0xF0, true));
 
-	i2c_master_write_byte(cmd, OLED_CMD_DISPLAY_ON, true);
-	i2c_master_stop(cmd);
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_SET_MUX_RATIO, true));
+  assert(ESP_OK == i2c_master_write_byte(cmd, 0x3F, true));
+
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_DISPLAY_OFF, true));
+  assert(ESP_OK == i2c_master_write_byte(cmd, 0x00, true));
+
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_SET_DISPLAY_OFFSET, true));
+
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_SET_CHARGE_PUMP, true));
+  assert(ESP_OK == i2c_master_write_byte(cmd, 0x14, true));
+
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_SET_MEMORY_ADDR_MODE, true));
+  assert(ESP_OK == i2c_master_write_byte(cmd, 0x00, true));
+
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_SET_SEGMENT_REMAP, true)); // reverse left-right mapping
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_SET_COM_SCAN_MODE, true)); // reverse bottom-up mapping
+
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_SET_COM_PIN_MAP, true));
+  assert(ESP_OK == i2c_master_write_byte(cmd, 0x12, true));
+
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_SET_CONTRAST, true)); 
+  assert(ESP_OK == i2c_master_write_byte(cmd, 0xCF, true)); 
+
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_SET_PRECHARGE, true)); 
+  assert(ESP_OK == i2c_master_write_byte(cmd, 0xF1, true)); 
+
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_DISPLAY_RAM, true)); 
+
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_DISPLAY_NORMAL, true)); 
+  assert(ESP_OK == i2c_master_write_byte(cmd, 0x2E, true));            // stop scroll 
+
+  assert(ESP_OK == i2c_master_write_byte(cmd, OLED_CMD_DISPLAY_ON, true));
+
+  assert(ESP_OK == i2c_master_stop(cmd));
 
 	espRc = i2c_master_cmd_begin(I2C_NUM_0, cmd, 10/portTICK_PERIOD_MS);
 	if (espRc == ESP_OK) {
 		ESP_LOGI(tag, "OLED configured successfully");
 	} else {
-		ESP_LOGE(tag, "OLED configuration failed. code: 0x%.2X", espRc);
+		ESP_LOGE(tag, "OLED configuration failed. code: %d", espRc);
 	}
 	i2c_cmd_link_delete(cmd);
 }
