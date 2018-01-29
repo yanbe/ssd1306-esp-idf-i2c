@@ -10,6 +10,18 @@ About
 This sample code implement procedures to read values from 128x64 OLED display with SSD1306 driver via ESP-IDF's I2C master driver. It supports all features decribed in `Solomon Systech's SSD1306 datasheet`_.
 
 ----------
+For use in `esp-idf` project
+----------
+This can be included as a component in an existing ESP32 project using the `esp-idf` framework.
+
+From you project root
+
+```
+git submodule add https://github.com/morganrallen/libssd1306-esp-idf-i2c.git components/libssd1306-esp-idf-i2c
+make # Enable SSD1306, set SDA/SCL to appropriate pins
+```
+
+----------
 For local setup
 ----------
 

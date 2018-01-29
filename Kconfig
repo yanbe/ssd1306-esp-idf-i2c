@@ -1,0 +1,20 @@
+#ESP-IDF Kconfig configuration file. Not used for ESP8266 RTOS/non-RTOS SDKs.
+
+menuconfig SSD1306_ENABLED
+    bool "SSD1306"
+    help
+        Select this option to enable SSD1306 driver and show the submodule with SSD1306 configuration
+
+config SSD1306_SDA_PIN
+	int "GPIO to handle SDA"
+        depends on SSD1306_ENABLED
+	default 15
+	help
+		GPIO to handle SDA
+
+config SSD1306_SCL_PIN
+	int "GPIO to handle SCL"
+        depends on SSD1306_ENABLED
+	default 2
+	help
+		GPIO to handle SCL

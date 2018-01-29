@@ -30,7 +30,7 @@
 #define OLED_CMD_SET_DISPLAY_START_LINE 0x40
 #define OLED_CMD_SET_SEGMENT_REMAP      0xA1    
 #define OLED_CMD_SET_MUX_RATIO          0xA8    // follow with 0x3F = 64 MUX
-#define OLED_CMD_SET_COM_SCAN_MODE      0xC8    
+#define OLED_CMD_SET_COM_SCAN_MODE      0xC0    // 0xC8
 #define OLED_CMD_SET_DISPLAY_OFFSET     0xD3    // follow with 0x00
 #define OLED_CMD_SET_COM_PIN_MAP        0xDA    // follow with 0x12
 #define OLED_CMD_NOP                    0xE3    // NOP
@@ -42,5 +42,13 @@
 
 // Charge Pump (pg.62)
 #define OLED_CMD_SET_CHARGE_PUMP        0x8D    // follow with 0x14
+
+void i2c_master_init();
+void ssd1306_init();
+void task_ssd1306_display_pattern(void *ignore);
+void task_ssd1306_display_clear(void *ignore);
+void task_ssd1306_contrast(void *ignore);
+void task_ssd1306_scroll(void *ignore);
+void task_ssd1306_display_text(const void *arg_text);
 
 #endif /* MAIN_SSD1366_H_ */
