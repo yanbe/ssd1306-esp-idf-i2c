@@ -82,6 +82,7 @@ void task_ssd1306_display_clear(void *ignore) {
 	i2c_cmd_handle_t cmd;
 
 	uint8_t zero[128];
+	memset(zero, 0, sizeof zero);
 	for (uint8_t i = 0; i < 8; i++) {
 		cmd = i2c_cmd_link_create();
 		i2c_master_start(cmd);
