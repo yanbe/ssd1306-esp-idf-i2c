@@ -11,8 +11,18 @@
 #include "ssd1366.h"
 #include "font8x8_basic.h"
 
-#define SDA_PIN GPIO_NUM_15
-#define SCL_PIN GPIO_NUM_2
+#define OLED_FEATHER_WING
+
+#ifdef OLED_FEATHER_WING // Adafruit OLED Feather Wing
+	#define SDA_PIN GPIO_NUM_23
+	#define SCL_PIN GPIO_NUM_22
+#else
+	#define SDA_PIN GPIO_NUM_15
+	#define SCL_PIN GPIO_NUM_2
+#endif
+
+// #define SSD1306_LCDHEIGHT 64
+#define SSD1306_LCDHEIGHT 32
 
 #define tag "SSD1306"
 
@@ -38,6 +48,9 @@ void ssd1306_init() {
 	i2c_master_start(cmd);
 	i2c_master_write_byte(cmd, (OLED_I2C_ADDRESS << 1) | I2C_MASTER_WRITE, true);
 	i2c_master_write_byte(cmd, OLED_CONTROL_BYTE_CMD_STREAM, true);
+
+	i2c_master_write_byte(cmd, OLED_CMD_SET_MUX_RATIO, true);                  // 0xA8
+	i2c_master_write_byte(cmd, SSD1306_LCDHEIGHT - 1, true);
 
 	i2c_master_write_byte(cmd, OLED_CMD_SET_CHARGE_PUMP, true);
 	i2c_master_write_byte(cmd, 0x14, true);
@@ -81,7 +94,7 @@ void task_ssd1306_display_pattern(void *ignore) {
 void task_ssd1306_display_clear(void *ignore) {
 	i2c_cmd_handle_t cmd;
 
-	uint8_t zero[128];
+	uint8_t zero[128] = {0,};
 	for (uint8_t i = 0; i < 8; i++) {
 		cmd = i2c_cmd_link_create();
 		i2c_master_start(cmd);
